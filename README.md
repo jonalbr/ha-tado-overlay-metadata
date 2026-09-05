@@ -5,8 +5,7 @@ overlay settings and their absolute expiry times. Designed for automations that
 temporarily pause heating and need to remember the previous settings.
 
 **Status: initial development version.** Unit tests cover the parser, action
-boundary, config flow and unload/reload behavior. Live Home Assistant validation
-and confirmation of next-time-block expiry data are still pending.
+boundary, config flow and unload/reload behavior. Live capture succeeded on HA 2026.9.0, including a next-time-block setting returned by Tado as a TIMER with an absolute expiry. The timed-OFF write action still needs its live smoke test.
 
 ## What it does
 
@@ -16,8 +15,7 @@ and confirmation of next-time-block expiry data are still pending.
 - Returns heating mode, temperature, original termination type and absolute expiry.
 - Reports malformed, unsupported or incomplete zones individually.
 
-It does not switch heaters, restore settings, manage windows, change Home/Away,
-or persist snapshots. Those responsibilities belong to the calling automation.
+It also offers the explicit `restore_timed_off` action for the finite-OFF case the built-in climate action cannot preserve. It does not automatically manage windows, change Home/Away or persist snapshots. Those responsibilities belong to the calling automation.
 It does not replace the built-in Tado integration.
 
 ## Compatibility
@@ -29,8 +27,7 @@ It does not replace the built-in Tado integration.
 - An internal adapter accesses the built-in coordinator's `_tado` client. This
   private dependency may need maintenance after a Home Assistant update.
 - A valid absolute `expiry` or `projectedExpiry` is required for finite overlays.
-  Availability of these fields on real next-time-block overlays is **not yet
-  verified**. Missing expiry data produces an error rather than an invented time.
+  A live next-time-block setting was returned as a TIMER with a valid expiry; other account and device combinations still need verification. Missing expiry data produces an error rather than an invented time.
 
 ## Install with HACS
 
@@ -110,8 +107,17 @@ On release, recheck the current window and heating-season conditions.
 For finite settings, compare the original deadline to the current time. If it has
 passed, return to the current Tado schedule. Otherwise only restore the remaining
 duration. Do not send a fresh "next time block" command after the original deadline.
-Timer-based OFF overlays also need a restoration method that preserves OFF and
-its expiry; the normal HA `climate.turn_off` action alone does not do that.
+For a timer-based OFF overlay whose original deadline is still in the future,
+call `tado_overlay_metadata.restore_timed_off` with `zone_id` and `expires_at`
+from the saved snapshot, and a `response_variable`. It writes an OFF timer using
+the remaining seconds. Check the release conditions immediately before calling.
+Expired input raises an action error; the caller must recheck and return to
+schedule when allowed. No Home/Away or schedule settings are changed.
+
+Tado accepts relative timer durations, so transport latency can shift the server
+deadline by a few seconds. A successful write response does not prove that an
+offline thermostat has received it. Read back with `capture` after uncertain
+results before retrying.
 
 Missing metadata is not permission to resume heating. Whole-request failures
 raise a Home Assistant action error; per-zone failures appear in `errors` and have

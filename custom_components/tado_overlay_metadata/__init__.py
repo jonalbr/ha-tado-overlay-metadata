@@ -1,8 +1,10 @@
-"""Read-only overlay metadata using Home Assistant's existing Tado session."""
+"""Overlay metadata and an explicit timed-OFF action using the existing session."""
 
 import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from functools import partial
+from time import time
 from typing import Any
 
 import voluptuous as vol
@@ -30,6 +32,28 @@ CAPTURE_SCHEMA = vol.Schema(
 )
 
 
+TIMED_OFF_SCHEMA = vol.Schema(
+    {
+        vol.Optional("config_entry_id"): str,
+        vol.Required("zone_id"): positive_int,
+        vol.Required("expires_at"): positive_int,
+    }
+)
+
+
+def set_timed_off(client: Any, zone_id: int, expires_at: int) -> dict[str, Any]:
+    """Compute remaining seconds in the executor, just before the cloud write.
+
+    Tado accepts a relative duration, so transport latency can move its server
+    deadline by a few seconds. Never create an indefinite OFF on expired input.
+    """
+    seconds = int(expires_at - time())
+    if seconds < 1:
+        raise action_error("expiry_passed")
+    client.set_zone_overlay(zone_id, "TIMER", duration=seconds, device_type="HEATING", power="OFF")
+    return {"zone_id": zone_id, "requested_expires_at": expires_at}
+
+
 @dataclass
 class Runtime:
     """No credentials or cloud state are cached in this integration."""
@@ -49,7 +73,7 @@ def action_error(key: str) -> HomeAssistantError:
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Register actions independently of loaded entries, as required by HA."""
 
-    async def capture(call: ServiceCall) -> dict[str, Any]:
+    async def capture(call: ServiceCall, *, timed_off: bool = False) -> dict[str, Any]:
         active = {
             entry.entry_id: entry
             for entry in hass.config_entries.async_entries(DOMAIN)
@@ -94,6 +118,17 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             client = getattr(coordinator, "_tado", None)
             if client is None:
                 raise action_error("incompatible_source")
+            if timed_off:
+                try:
+                    return await hass.async_add_executor_job(
+                        partial(
+                            set_timed_off, client, call.data["zone_id"], call.data["expires_at"]
+                        )
+                    )
+                except HomeAssistantError:
+                    raise
+                except Exception:
+                    raise action_error("cannot_write") from None
             try:
                 response = await hass.async_add_executor_job(client.get_zone_states)
             except Exception:
@@ -107,6 +142,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 raise action_error("unsupported_response") from None
         return {"captured_at": datetime.now(timezone.utc).isoformat(), **result}
 
+    hass.services.async_register(
+        DOMAIN,
+        "restore_timed_off",
+        partial(capture, timed_off=True),
+        schema=TIMED_OFF_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
+    )
     hass.services.async_register(
         DOMAIN,
         "capture",

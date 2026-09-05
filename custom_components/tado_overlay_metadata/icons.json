@@ -1,1 +1,10 @@
-{"services": {"capture": {"service": "mdi:thermostat"}}}
+{
+  "services": {
+    "capture": {
+      "service": "mdi:thermostat"
+    },
+    "restore_timed_off": {
+      "service": "mdi:timer-outline"
+    }
+  }
+}

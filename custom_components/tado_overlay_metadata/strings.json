@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Select an existing Tado connection",
-        "description": "Read original heating overlay settings and expiry times. This integration does not control heating or change Home/Away settings.",
+        "description": "Read original heating overlay settings and expiry times. An explicit timed-OFF action supports restore automations. No automatic heating control or Home/Away changes.",
         "data": {
           "tado_entry_id": "Tado integration"
         }
@@ -31,6 +31,24 @@
           "description": "Optional list of positive integer Tado zone IDs. Omit to read all zones."
         }
       }
+    },
+    "restore_timed_off": {
+      "name": "Restore timed OFF",
+      "description": "Write an OFF timer until the supplied original UTC expiry. Does not check windows or heating season; the caller must do that. Expired input is rejected. Returns the requested deadline; verify through capture if needed.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Metadata integration",
+          "description": "Required when more than one Tado Overlay Metadata entry is loaded."
+        },
+        "zone_id": {
+          "name": "Zone ID",
+          "description": "Positive integer Tado heating zone ID."
+        },
+        "expires_at": {
+          "name": "Original expiry",
+          "description": "Original absolute UTC Unix timestamp in seconds. Must still be in the future."
+        }
+      }
     }
   },
   "exceptions": {
@@ -51,6 +69,12 @@
     },
     "unsupported_response": {
       "message": "Tado returned an unsupported zone metadata response."
+    },
+    "expiry_passed": {
+      "message": "The original OFF expiry has passed. Recheck the release conditions and return to schedule if allowed."
+    },
+    "cannot_write": {
+      "message": "Unable to restore the Tado OFF timer. Check the actual zone state before retrying."
     }
   }
 }
