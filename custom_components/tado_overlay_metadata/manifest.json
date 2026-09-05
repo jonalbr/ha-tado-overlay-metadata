@@ -1,0 +1,17 @@
+{
+  "domain": "tado_overlay_metadata",
+  "name": "Tado Overlay Metadata",
+  "codeowners": [
+    "@jonalbr"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "tado"
+  ],
+  "documentation": "https://github.com/jonalbr/ha-tado-overlay-metadata",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/jonalbr/ha-tado-overlay-metadata/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

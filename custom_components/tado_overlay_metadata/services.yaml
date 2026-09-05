@@ -1,0 +1,12 @@
+capture:
+  fields:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: tado_overlay_metadata
+    zone_ids:
+      required: false
+      example: [1, 2]
+      selector:
+        object:

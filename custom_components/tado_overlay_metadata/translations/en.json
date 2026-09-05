@@ -1,0 +1,56 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Select an existing Tado connection",
+        "description": "Read original heating overlay settings and expiry times. This integration does not control heating or change Home/Away settings.",
+        "data": {
+          "tado_entry_id": "Tado integration"
+        }
+      }
+    },
+    "error": {
+      "source_unavailable": "The selected Tado connection is no longer available."
+    },
+    "abort": {
+      "already_configured": "This Tado connection is already configured.",
+      "no_tado": "Set up and load the built-in Tado integration first."
+    }
+  },
+  "services": {
+    "capture": {
+      "name": "Capture overlay metadata",
+      "description": "Read fresh original modes, temperatures, termination types and absolute expiry times. Returns snapshots and per-zone errors; does not change heating.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Metadata integration",
+          "description": "Required when more than one Tado Overlay Metadata entry is loaded."
+        },
+        "zone_ids": {
+          "name": "Zone IDs",
+          "description": "Optional list of positive integer Tado zone IDs. Omit to read all zones."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "select_entry": {
+      "message": "Select one loaded Tado Overlay Metadata config entry."
+    },
+    "entry_not_loaded": {
+      "message": "The selected Tado Overlay Metadata config entry is not loaded."
+    },
+    "source_not_loaded": {
+      "message": "The source Tado integration is not loaded."
+    },
+    "incompatible_source": {
+      "message": "The source Tado coordinator is not compatible with this adapter."
+    },
+    "cannot_read": {
+      "message": "Unable to read Tado zone metadata."
+    },
+    "unsupported_response": {
+      "message": "Tado returned an unsupported zone metadata response."
+    }
+  }
+}
