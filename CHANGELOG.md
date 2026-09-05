@@ -1,9 +1,10 @@
 # Changelog
 
-## 0.1.1 — Unreleased
+## 0.1.1 — 2026-09-06
 
 - Add explicit `restore_timed_off` for preserving finite OFF overlays in restore automations.
 - Verify live capture and next-time-block expiry on HA 2026.9.0.
+- Verify finite OFF writes and stable expiry on two successive live reads.
 - Keep window decisions and persistence in the caller; no automatic controls added.
 
 ## 0.1.0 — Unreleased

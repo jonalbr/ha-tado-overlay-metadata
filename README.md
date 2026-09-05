@@ -5,7 +5,7 @@ overlay settings and their absolute expiry times. Designed for automations that
 temporarily pause heating and need to remember the previous settings.
 
 **Status: initial development version.** Unit tests cover the parser, action
-boundary, config flow and unload/reload behavior. Live capture succeeded on HA 2026.9.0, including a next-time-block setting returned by Tado as a TIMER with an absolute expiry. The timed-OFF write action still needs its live smoke test.
+boundary, config flow and unload/reload behavior. Live capture succeeded on HA 2026.9.0, including a next-time-block setting returned by Tado as a TIMER with an absolute expiry. The timed-OFF action was also verified live: two reads returned the same finite OFF expiry; the original manual OFF state was then restored.
 
 ## What it does
 
