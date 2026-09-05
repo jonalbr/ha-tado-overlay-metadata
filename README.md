@@ -151,6 +151,10 @@ Tests use synthetic Tado payloads and minimal Home Assistant boundary doubles;
 they do not substitute for a live integration test. See [RELEASING.md](RELEASING.md)
 for the installation smoke test required before calling a version production-ready.
 
+GitHub Actions only validates this repository. The HACS compatibility job does
+not publish, submit or add the integration to the public HACS catalog. Installation
+remains through this custom repository unless a separate catalog submission is made.
+
 ## Updates and removal
 
 Publish a versioned GitHub release with a matching `manifest.json` version to make
