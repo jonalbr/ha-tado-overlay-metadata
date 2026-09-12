@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.2 - Unreleased
+## 0.1.2 - 2026-09-12
 
 - Validate the existing Tado API connection during configuration and startup.
 - Retry startup after temporary connection failures and report missing or incompatible sources.
