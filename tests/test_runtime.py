@@ -20,7 +20,7 @@ async def configured(boundary):
         data={"tado_entry_id": "source"},
         state=boundary.states.LOADED,
     )
-    client = SimpleNamespace(get_zone_states=Mock(return_value=RAW))
+    client = SimpleNamespace(get_zone_states=Mock(return_value=RAW), set_zone_overlay=Mock())
     source = SimpleNamespace(
         entry_id="source",
         domain="tado",
@@ -31,6 +31,9 @@ async def configured(boundary):
     boundary.entries.update(metadata=metadata, source=source)
     await boundary.module.async_setup(boundary.hass, {})
     await boundary.module.async_setup_entry(boundary.hass, metadata)
+    client.get_zone_states.assert_called_once_with()
+    client.get_zone_states.reset_mock()
+    client.set_zone_overlay.assert_not_called()
     return metadata, source, client
 
 
@@ -55,7 +58,9 @@ def test_source_reload_and_unavailability(ha_boundary):
     async def run():
         b = ha_boundary
         _, source, old_client = await configured(b)
-        new_client = SimpleNamespace(get_zone_states=Mock(return_value=RAW))
+        new_client = SimpleNamespace(
+            get_zone_states=Mock(return_value=RAW), set_zone_overlay=Mock()
+        )
         source.runtime_data = SimpleNamespace(_tado=new_client)
         await b.service["handler"](SimpleNamespace(data={}))
         old_client.get_zone_states.assert_not_called()

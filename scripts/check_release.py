@@ -25,10 +25,20 @@ def check():
     assert json.loads((ROOT / "hacs.json").read_text(encoding="utf-8"))["homeassistant"]
     english = json.loads((COMPONENT / "strings.json").read_text(encoding="utf-8"))
     assert english == json.loads((COMPONENT / "translations/en.json").read_text(encoding="utf-8"))
-    image = (COMPONENT / "brand/icon.png").read_bytes()
-    assert image[:8] == b"\x89PNG\r\n\x1a\n"
-    assert struct.unpack(">II", image[16:24]) == (256, 256)
-    for name in ("README.md", "LICENSE", "CHANGELOG.md", "uv.lock"):
+    for filename, size in (("icon.png", 256), ("icon@2x.png", 512)):
+        image = (COMPONENT / "brand" / filename).read_bytes()
+        assert image[:8] == b"\x89PNG\r\n\x1a\n"
+        assert struct.unpack(">II", image[16:24]) == (size, size)
+    assert (COMPONENT / "quality_scale.yaml").is_file()
+    assert f"## {manifest['version']} - " in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    for name in (
+        "README.md",
+        "LICENSE",
+        "CHANGELOG.md",
+        "uv.lock",
+        "DEVELOPMENT.md",
+        "RELEASING.md",
+    ):
         assert (ROOT / name).is_file(), name
     print("Local release structure and metadata checks passed")
 

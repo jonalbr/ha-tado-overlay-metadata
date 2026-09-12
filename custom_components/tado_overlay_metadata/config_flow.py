@@ -5,6 +5,7 @@ from typing import Any
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntryState, ConfigFlow, ConfigFlowResult
 
+from .adapter import SourceError, async_validate_source
 from .const import CONF_TADO_ENTRY_ID, DOMAIN, NAME, SOURCE_DOMAIN
 
 
@@ -14,6 +15,7 @@ class TadoOverlayMetadataFlow(ConfigFlow, domain=DOMAIN):
     VERSION = 1
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """Select and validate an existing Tado connection."""
         choices = {
             entry.entry_id: entry.title
             for entry in self.hass.config_entries.async_entries(SOURCE_DOMAIN)
@@ -27,11 +29,17 @@ class TadoOverlayMetadataFlow(ConfigFlow, domain=DOMAIN):
             if selected in choices:
                 await self.async_set_unique_id(selected)
                 self._abort_if_unique_id_configured()
-                return self.async_create_entry(
-                    title=f"{NAME}: {choices[selected]}",
-                    data={CONF_TADO_ENTRY_ID: selected},
-                )
-            errors["base"] = "source_unavailable"
+                try:
+                    await async_validate_source(self.hass, selected)
+                except SourceError as err:
+                    errors["base"] = str(err)
+                else:
+                    return self.async_create_entry(
+                        title=f"{NAME}: {choices[selected]}",
+                        data={CONF_TADO_ENTRY_ID: selected},
+                    )
+            else:
+                errors["base"] = "source_unavailable"
         return self.async_show_form(
             step_id="user",
             errors=errors,

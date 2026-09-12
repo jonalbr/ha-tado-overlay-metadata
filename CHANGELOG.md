@@ -1,18 +1,22 @@
 # Changelog
 
-## 0.1.1 — 2026-09-06
+## 0.1.2 - Unreleased
 
-- Add explicit `restore_timed_off` for preserving finite OFF overlays in restore automations.
-- Verify live capture and next-time-block expiry on HA 2026.9.0.
-- Verify finite OFF writes and stable expiry on two successive live reads.
-- Keep window decisions and persistence in the caller; no automatic controls added.
+- Validate the existing Tado API connection during configuration and startup.
+- Retry startup after temporary connection failures and report missing or incompatible sources.
+- Add Home Assistant framework tests with full config-flow coverage and error recovery checks.
+- Document both actions, installation, removal, dependencies and restoration behavior.
+- Add a Bronze quality self-assessment and disclose AI-assisted development.
 
-## 0.1.0 — Unreleased
+## 0.1.1 - 2026-09-06
+
+- Add `restore_timed_off` to preserve finite OFF overlays in restoration automations.
+
+## 0.1.0 - Initial implementation
 
 - Add an English config flow linked to an existing built-in Tado connection.
 - Add the read-only `capture` action with filtered or all-zone response data.
 - Preserve absolute override expiry and distinguish manual OFF from schedule OFF.
-- Reject missing expiry, unsupported types and malformed data explicitly.
-- Handle source reloads without storing credentials or a second cloud session.
-- Add HACS layout, local brand assets, uv-managed tests and release checks.
-- Live Home Assistant and real next-time-block expiry validation are pending.
+- Reject missing expiry, unsupported types and malformed data.
+- Resolve the current Tado session on each action to support source reloads.
+- Add HACS metadata, local brand assets, tests and release checks.

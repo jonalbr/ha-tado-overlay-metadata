@@ -1,18 +1,21 @@
 [project]
 name = "ha-tado-overlay-metadata"
-version = "0.1.1"
+version = "0.1.2"
 description = "Read original Tado heating overlay settings and expiry times in Home Assistant"
-requires-python = ">=3.14"
+requires-python = ">=3.14.2"
 dependencies = []
 
 [dependency-groups]
-dev = ["pytest==9.1.1", "voluptuous==0.16.0", "ruff==0.16.6"]
+dev = ["pytest==9.0.3", "voluptuous==0.16.0", "ruff==0.16.6"]
+
+ha-test = ["pytest-homeassistant-custom-component==0.13.365; sys_platform == 'linux'", "python-tado==0.18.16; sys_platform == 'linux'"]
 
 [tool.uv]
 package = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
 
 [tool.ruff]
 target-version = "py314"

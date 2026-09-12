@@ -26,6 +26,10 @@ def snapshot():
 
 @pytest.fixture
 def ha_boundary(monkeypatch):
+    for name in list(sys.modules):
+        if name == "unit_tado_metadata" or name.startswith("unit_tado_metadata."):
+            monkeypatch.delitem(sys.modules, name)
+
     class ConfigEntryState(Enum):
         LOADED = "loaded"
         NOT_LOADED = "not_loaded"
@@ -69,10 +73,15 @@ def ha_boundary(monkeypatch):
             "SupportsResponse": SimpleNamespace(ONLY="only"),
         },
         "homeassistant.exceptions": {
+            "ConfigEntryError": HomeAssistantError,
+            "ConfigEntryNotReady": HomeAssistantError,
             "HomeAssistantError": HomeAssistantError,
             "ServiceValidationError": HomeAssistantError,
         },
         "homeassistant.helpers": {},
+        "homeassistant.helpers.config_validation": {
+            "config_entry_only_config_schema": lambda domain: None,
+        },
         "homeassistant.helpers.typing": {"ConfigType": dict},
     }
     for name, members in exports.items():

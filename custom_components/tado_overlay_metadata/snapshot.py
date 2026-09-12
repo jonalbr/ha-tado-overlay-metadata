@@ -54,8 +54,7 @@ def normalize(raw: Any) -> dict[str, Any]:
         raise SnapshotError("unsupported_termination")
     expiry = None
     if kind != "MANUAL":
-        # projectedExpiry is accepted when provided by Tado. Its availability
-        # for the user's next-block overrides still needs live verification.
+        # Some finite overlays use projectedExpiry instead of expiry.
         value = termination.get("expiry")
         if value is None:
             value = termination.get("projectedExpiry")

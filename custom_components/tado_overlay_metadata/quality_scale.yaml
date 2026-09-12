@@ -1,0 +1,82 @@
+# Bronze self-assessment for a custom integration; not an official HA rating.
+rules:
+  action-setup:
+    status: done
+    comment: >-
+      Both response-only actions are registered in async_setup and remain registered after unload.
+  appropriate-polling:
+    status: exempt
+    comment: >-
+      No scheduled polling. Reads occur during configuration, startup and explicit capture calls.
+  brands:
+    status: done
+    comment: >-
+      Custom integration branding is provided by brand/icon.png and brand/icon@2x.png.
+  common-modules:
+    status: done
+    comment: >-
+      Shared source access and validation are in adapter.py; identifiers are in const.py.
+  config-flow-test-coverage:
+    status: done
+    comment: >-
+      Real Home Assistant flow-manager tests cover all statements and branches, error recovery and duplicates. CI enforces 100% coverage.
+  config-flow:
+    status: done
+    comment: >-
+      The UI selects a loaded built-in Tado entry. YAML configuration is not required.
+  dependency-transparency:
+    status: done
+    comment: >-
+      README documents the built-in Tado dependency, private coordinator interface and python-tado library. The manifest declares tado and no extra requirements.
+  docs-actions:
+    status: done
+    comment: >-
+      README documents capture and restore_timed_off parameters, responses, errors and examples.
+  docs-triggers:
+    status: exempt
+    comment: >-
+      No custom triggers are provided.
+  docs-conditions:
+    status: exempt
+    comment: >-
+      No custom conditions are provided.
+  docs-high-level-description:
+    status: done
+    comment: >-
+      README describes preserving classic Tado heating overlays for restoration automations.
+  docs-installation-instructions:
+    status: done
+    comment: >-
+      README includes prerequisites, HACS and manual installation, and UI setup.
+  docs-removal-instructions:
+    status: done
+    comment: >-
+      README explains entry deletion, file removal, restart and externally stored state.
+  entity-event-setup:
+    status: exempt
+    comment: >-
+      The integration creates no entities or entity event subscriptions.
+  entity-unique-id:
+    status: exempt
+    comment: >-
+      The integration creates no entities.
+  has-entity-name:
+    status: exempt
+    comment: >-
+      The integration creates no entities.
+  runtime-data:
+    status: done
+    comment: >-
+      Typed ConfigEntry.runtime_data holds Runtime with a lock and an active flag.
+  test-before-configure:
+    status: done
+    comment: >-
+      The flow checks the source client contract and performs a read-only get_zone_states call before creating an entry.
+  test-before-setup:
+    status: done
+    comment: >-
+      Startup validates the source and response envelope before assigning runtime data. Temporary failures use ConfigEntryNotReady.
+  unique-config-entry:
+    status: done
+    comment: >-
+      The source Tado entry ID is the unique ID. Duplicate entries are rejected before a network request.

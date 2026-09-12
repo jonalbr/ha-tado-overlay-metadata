@@ -10,7 +10,12 @@
       }
     },
     "error": {
-      "source_unavailable": "The selected Tado connection is no longer available."
+      "source_unavailable": "The selected Tado connection is no longer available.",
+      "source_missing": "The linked Tado integration was removed. Add Tado, then recreate this metadata entry.",
+      "source_not_loaded": "The source Tado integration is not loaded.",
+      "incompatible_source": "The source Tado coordinator is not compatible with this adapter.",
+      "cannot_read": "Unable to read Tado zone metadata.",
+      "unsupported_response": "Tado returned an unsupported zone metadata response."
     },
     "abort": {
       "already_configured": "This Tado connection is already configured.",
@@ -75,6 +80,9 @@
     },
     "cannot_write": {
       "message": "Unable to restore the Tado OFF timer. Check the actual zone state before retrying."
+    },
+    "source_missing": {
+      "message": "The linked Tado integration was removed. Add Tado, then recreate this metadata entry."
     }
   }
 }

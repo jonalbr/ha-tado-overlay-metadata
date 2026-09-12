@@ -10,11 +10,20 @@ from typing import Any
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
 from homeassistant.core import HomeAssistant, ServiceCall, SupportsResponse
-from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
+from homeassistant.exceptions import (
+    ConfigEntryError,
+    ConfigEntryNotReady,
+    HomeAssistantError,
+    ServiceValidationError,
+)
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
-from .const import CONF_TADO_ENTRY_ID, DOMAIN, SOURCE_DOMAIN
+from .adapter import SourceError, async_validate_source, resolve_client
+from .const import CONF_TADO_ENTRY_ID, DOMAIN
 from .snapshot import SnapshotError, normalize_response
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
 def positive_int(value: Any) -> int:
@@ -71,7 +80,7 @@ def action_error(key: str) -> HomeAssistantError:
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Register actions independently of loaded entries, as required by HA."""
+    """Register actions independently of loaded config entries."""
 
     async def capture(call: ServiceCall, *, timed_off: bool = False) -> dict[str, Any]:
         active = {
@@ -105,19 +114,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 or not runtime.active
             ):
                 raise action_error("entry_not_loaded")
-            source = hass.config_entries.async_get_entry(entry.data[CONF_TADO_ENTRY_ID])
-            if (
-                source is None
-                or source.domain != SOURCE_DOMAIN
-                or source.state != ConfigEntryState.LOADED
-            ):
-                raise action_error("source_not_loaded")
-            coordinator = getattr(source, "runtime_data", None)
-            # Intentionally narrow private dependency, reviewed against HA
-            # 2026.9.0 / python-tado 0.18.16. Never read or export refresh tokens.
-            client = getattr(coordinator, "_tado", None)
-            if client is None:
-                raise action_error("incompatible_source")
+            try:
+                client = resolve_client(hass, entry.data[CONF_TADO_ENTRY_ID])
+            except SourceError as err:
+                raise action_error(str(err)) from None
             if timed_off:
                 try:
                     return await hass.async_add_executor_job(
@@ -160,7 +160,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: TadoOverlayMetadataConfigEntry) -> bool:
-    """Register local runtime only; no startup cloud request or heating command."""
+    """Validate the source before enabling actions for this config entry."""
+    try:
+        await async_validate_source(hass, entry.data[CONF_TADO_ENTRY_ID])
+    except SourceError as err:
+        key = str(err)
+        if key in {"source_not_loaded", "cannot_read"}:
+            raise ConfigEntryNotReady(translation_domain=DOMAIN, translation_key=key) from None
+        raise ConfigEntryError(translation_domain=DOMAIN, translation_key=key) from None
     entry.runtime_data = Runtime(asyncio.Lock())
     return True
 
