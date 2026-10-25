@@ -13,8 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
+          version: "0.13.5"
           enable-cache: true
       - run: uv sync --locked
       - run: uv run pytest --ignore=tests/ha
@@ -26,8 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.0.1
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
+          version: "0.13.5"
           enable-cache: true
       - run: uv sync --locked --group ha-test
       - run: >-

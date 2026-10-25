@@ -1,6 +1,6 @@
 # Bronze quality assessment
 
-Version 0.1.2 is aligned with the applicable Bronze requirements in the
+The 0.1.3 candidate retains the applicable Bronze requirements assessed against the
 [Home Assistant quality scale](https://developers.home-assistant.io/docs/core/integration-quality-scale/).
 This is a self-assessment of a custom integration. Home Assistant assigns custom
 integrations the Custom designation; no official Bronze certification is claimed.
@@ -35,9 +35,15 @@ available on 2026-09-12. Machine-readable status is recorded in
 ## Verification
 
 - 61 portable tests cover normalization, action boundaries, serialization and timed OFF.
-- 17 tests use Home Assistant 2026.9.2 and mocked Tado network calls to check flow
+- 19 tests use Home Assistant 2026.10.4 and mocked Tado network calls to check flow
   creation, failures, recovery, duplicates, source reloads and the action lifecycle.
-- Config-flow coverage is 100% for statements and branches. The CI job fails below 100%.
+  Fixtures use Core's real Tado coordinator and the real python-tado interface,
+  with an autospecced classic API. Contract tests also check Core's library pin
+  and the timed-OFF call signature. Compatibility was rechecked on 2026-10-25.
+- The same 19 framework tests also pass on the minimum supported Home Assistant
+  2026.9.0 using its matching test plugin 0.13.363, including the Tado contract checks.
+- Config-flow coverage is 100% for statements and branches on both tested releases.
+  The CI job targets 2026.10.4 and fails below 100%.
 - The local release validator checks version agreement, translations, required
   files and both icon sizes. The release builder checks ZIP integrity.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 - 2026-10-25
+
+- Validate against Home Assistant 2026.10.4 while retaining support for 2026.9.0 or later.
+- Refresh development dependencies and CI tooling, with Python 3.14.9 for development.
+- Verify the built-in Tado coordinator and timed-OFF API contract in framework tests.
+
 ## 0.1.2 - 2026-09-12
 
 - Validate the existing Tado API connection during configuration and startup.

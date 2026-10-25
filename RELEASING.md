@@ -15,7 +15,7 @@
 
 1. Confirm GitHub Actions tests, HACS validation and hassfest succeed on that commit.
 2. Set the changelog release date and ensure the release commit includes it.
-3. Create a tag matching the manifest, for example `v0.1.2`, and publish its GitHub
+3. Create a tag matching the manifest, for example `v0.1.3`, and publish its GitHub
    release with changelog notes and the validated ZIP.
 
 Use a prerelease if required live validation is incomplete. Repository description
