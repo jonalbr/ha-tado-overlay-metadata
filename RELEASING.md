@@ -9,7 +9,7 @@
    the Linux Home Assistant suite with 100% config-flow branch coverage.
 4. Run `uv run python scripts/build_release.py`. Inspect the ZIP under `dist/`;
    it contains integration files for extraction into
-   `custom_components/tado_overlay_metadata/`. HACS downloads repository files.
+   `custom_components/tado_overlay_metadata/`. Marketplace downloads repository files.
 
 ## Publication
 
@@ -19,8 +19,12 @@
    release with changelog notes and the validated ZIP.
 
 Use a prerelease if required live validation is incomplete. Repository description
-and topics should identify Home Assistant, HACS and Tado. HACS publication uses
-`jonalbr/ha-tado-overlay-metadata`.
+and topics should identify Home Assistant, Marketplace and Tado. Marketplace
+uses `jonalbr/ha-tado-overlay-metadata`. Keep the `hacs.json` filename and
+the HACS validation action as Marketplace uses the same metadata and catalog.
+See the [Marketplace contributor documentation](https://contributors.home-assistant.io/marketplace/).
 
-Users install updates through HACS and restart Home Assistant. Release notes must
+Users on Home Assistant 2026.11 or later install Marketplace updates from
+**Settings > Updates** and restart Home Assistant. Users on earlier
+versions update through HACS and restart. Release notes must
 describe any migration requirements or changes to supported Home Assistant versions.

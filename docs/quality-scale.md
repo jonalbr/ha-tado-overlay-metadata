@@ -22,7 +22,7 @@ available on 2026-09-12. Machine-readable status is recorded in
 | `docs-triggers` | Exempt | No custom triggers are provided. |
 | `docs-conditions` | Exempt | No custom conditions are provided. |
 | `docs-high-level-description` | Done | README describes preserving classic Tado heating overlays for restoration automations. |
-| `docs-installation-instructions` | Done | README includes prerequisites, HACS and manual installation, and UI setup. |
+| `docs-installation-instructions` | Done | README includes prerequisites, Marketplace installation, and UI setup. |
 | `docs-removal-instructions` | Done | README explains entry deletion, file removal, restart and externally stored state. |
 | `entity-event-setup` | Exempt | The integration creates no entities or entity event subscriptions. |
 | `entity-unique-id` | Exempt | The integration creates no entities. |

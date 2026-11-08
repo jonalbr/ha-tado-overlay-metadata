@@ -36,22 +36,30 @@ the capture time. A next-time-block setting may be returned by Tado as `TIMER`.
 
 ## Installation
 
-### HACS
+[![Open your Home Assistant instance and open this repository in the Marketplace.](https://my.home-assistant.io/badges/marketplace_repository.svg)](https://my.home-assistant.io/redirect/marketplace_repository/?owner=jonalbr&repository=ha-tado-overlay-metadata&category=integration)
 
-[![Open this repository in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=jonalbr&repository=ha-tado-overlay-metadata&category=integration)
+<details>
+<summary>HACS (Home Assistant <2026.11)</summary>
 
 1. In HACS, open **Custom repositories**.
 2. Add `https://github.com/jonalbr/ha-tado-overlay-metadata` with category **Integration**.
 3. Download **Tado Overlay Metadata** and restart Home Assistant.
-4. Open **Settings > Devices & services > Add integration**.
-5. Select **Tado Overlay Metadata**, then select the existing Tado connection.
+4. Continue with [setup](#setup).
 
-### Manual installation
+For updates, update through HACS and restart Home Assistant.
 
-1. Copy the `custom_components/tado_overlay_metadata` directory into the Home
-   Assistant configuration directory's `custom_components` folder.
-2. Restart Home Assistant.
-3. Follow steps 4 and 5 above. No YAML configuration is required.
+</details>
+
+### Setup
+
+If the setup flow does not open automatically, open
+**Settings > Devices & services > Add integration** and select
+**Tado Overlay Metadata**. Select the existing Tado connection. No YAML
+configuration is required.
+
+## Updates
+
+Install updates from **Settings > Updates**, then restart Home Assistant.
 
 ## Actions
 
@@ -180,7 +188,8 @@ command are separate operations, and cloud data may reflect an older device repo
 
 1. Disable or update automations that call this integration's actions.
 2. Open **Settings > Devices & services > Tado Overlay Metadata** and delete its entries.
-3. Remove the integration from HACS, or delete its directory for a manual installation.
+3. Open its Marketplace repository page and select **Uninstall** from the menu.
+   On Home Assistant <2026.11, remove it through HACS instead.
 4. Restart Home Assistant.
 
 Removal does not cancel an OFF timer already sent to Tado or remove snapshots
