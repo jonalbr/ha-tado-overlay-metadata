@@ -1,6 +1,9 @@
 {
   "domain": "tado_overlay_metadata",
   "name": "Tado Overlay Metadata",
+  "categories": [
+    "climate.thermostats_heating"
+  ],
   "codeowners": [
     "@jonalbr"
   ],

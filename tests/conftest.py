@@ -35,7 +35,9 @@ def ha_boundary(monkeypatch):
         NOT_LOADED = "not_loaded"
 
     class HomeAssistantError(Exception):
-        def __init__(self, message=None, *, translation_domain=None, translation_key=None):
+        def __init__(
+            self, message=None, *, translation_domain=None, translation_key=None
+        ):
             self.translation_key = translation_key
             super().__init__(message or translation_key)
 
@@ -104,7 +106,9 @@ def ha_boundary(monkeypatch):
         data={},
         config_entries=SimpleNamespace(
             async_get_entry=entries.get,
-            async_entries=lambda domain: [e for e in entries.values() if e.domain == domain],
+            async_entries=lambda domain: [
+                e for e in entries.values() if e.domain == domain
+            ],
         ),
         services=SimpleNamespace(async_register=register),
         async_add_executor_job=executor,

@@ -14,7 +14,7 @@ def timestamp(value: Any) -> int:
     if not isinstance(value, str):
         raise SnapshotError("missing_expiry")
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(value)
         if parsed.tzinfo is None:
             raise SnapshotError("expiry_without_timezone")
         return int(parsed.timestamp())
@@ -50,7 +50,12 @@ def normalize(raw: Any) -> dict[str, Any]:
     if not isinstance(termination, dict):
         raise SnapshotError("missing_termination")
     kind = termination.get("type")
-    if not isinstance(kind, str) or kind not in {"MANUAL", "TADO_MODE", "NEXT_TIME_BLOCK", "TIMER"}:
+    if not isinstance(kind, str) or kind not in {
+        "MANUAL",
+        "TADO_MODE",
+        "NEXT_TIME_BLOCK",
+        "TIMER",
+    }:
         raise SnapshotError("unsupported_termination")
     expiry = None
     if kind != "MANUAL":
@@ -90,7 +95,8 @@ def normalize_response(response: Any, zone_ids: list[int] | None) -> dict[str, A
         raise SnapshotError("invalid_zone_response")
     if zone_ids is None:
         if any(
-            not isinstance(key, str) or not key.isdecimal() or int(key) < 1 for key in raw_zones
+            not isinstance(key, str) or not key.isdecimal() or int(key) < 1
+            for key in raw_zones
         ):
             raise SnapshotError("invalid_zone_response")
         keys = sorted(raw_zones, key=int)

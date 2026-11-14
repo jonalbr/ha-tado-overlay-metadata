@@ -6,12 +6,13 @@ requires-python = ">=3.14.2"
 dependencies = []
 
 [dependency-groups]
-dev = ["pytest==9.0.3", "voluptuous==0.16.0", "ruff==0.17.2"]
+dev = ["pytest==9.0.3", "voluptuous==0.16.0", "ruff==0.17.5"]
 
 # The HA test plugin pins pytest 9.0.3; keep the portable suite on the same version.
 ha-test = [
-    "homeassistant==2026.10.4; sys_platform == 'linux'",
-    "pytest-homeassistant-custom-component==0.13.375; sys_platform == 'linux'",
+    "homeassistant==2026.11.1; sys_platform == 'linux'",
+    "pytest-homeassistant==2026.11.1; sys_platform == 'linux'",
+    "pytest-cov==7.1.0; sys_platform == 'linux'",
     # Match Home Assistant's built-in Tado manifest, rather than PyPI's latest major.
     "python-tado==0.18.16; sys_platform == 'linux'",
 ]
@@ -22,10 +23,13 @@ package = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# Let Home Assistant install its httpx alias before respx is imported.
+addopts = "-p no:respx"
+
+[tool.coverage.report]
+# Measure the component by path to avoid importing HA before its pytest bootstrap.
+# Keep the CI gate focused on config-flow statements and branches.
+include = ["custom_components/tado_overlay_metadata/config_flow.py"]
 
 [tool.ruff]
-target-version = "py314"
-line-length = 100
-
-[tool.ruff.lint]
-select = ["E", "F", "I"]
+# Use Ruff's default lint rules and formatter settings.

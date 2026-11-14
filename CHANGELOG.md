@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Validate against Home Assistant 2026.11.1 while retaining support for 2026.9.0 or later.
+- Added a new logo.
+- Classify the integration under heating thermostats in the Marketplace catalog.
+
 ## 0.1.3 - 2026-10-25
 
 - Validate against Home Assistant 2026.10.4 while retaining support for 2026.9.0 or later.

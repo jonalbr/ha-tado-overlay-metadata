@@ -2,7 +2,7 @@
 
 import asyncio
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from functools import partial
 from time import time
 from typing import Any
@@ -59,7 +59,9 @@ def set_timed_off(client: Any, zone_id: int, expires_at: int) -> dict[str, Any]:
     seconds = int(expires_at - time())
     if seconds < 1:
         raise action_error("expiry_passed")
-    client.set_zone_overlay(zone_id, "TIMER", duration=seconds, device_type="HEATING", power="OFF")
+    client.set_zone_overlay(
+        zone_id, "TIMER", duration=seconds, device_type="HEATING", power="OFF"
+    )
     return {"zone_id": zone_id, "requested_expires_at": expires_at}
 
 
@@ -122,16 +124,19 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 try:
                     return await hass.async_add_executor_job(
                         partial(
-                            set_timed_off, client, call.data["zone_id"], call.data["expires_at"]
+                            set_timed_off,
+                            client,
+                            call.data["zone_id"],
+                            call.data["expires_at"],
                         )
                     )
                 except HomeAssistantError:
                     raise
-                except Exception:
+                except Exception:  # noqa: BLE001 - Sanitize arbitrary vendor failures.
                     raise action_error("cannot_write") from None
             try:
                 response = await hass.async_add_executor_job(client.get_zone_states)
-            except Exception:
+            except Exception:  # noqa: BLE001 - Sanitize arbitrary vendor failures.
                 # Vendor exceptions can contain URLs or session information.
                 raise action_error("cannot_read") from None
             if not runtime.active:
@@ -140,7 +145,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
                 result = normalize_response(response, call.data.get("zone_ids"))
             except SnapshotError:
                 raise action_error("unsupported_response") from None
-        return {"captured_at": datetime.now(timezone.utc).isoformat(), **result}
+        return {"captured_at": datetime.now(UTC).isoformat(), **result}
 
     hass.services.async_register(
         DOMAIN,
@@ -159,20 +164,26 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: TadoOverlayMetadataConfigEntry) -> bool:
+async def async_setup_entry(
+    hass: HomeAssistant, entry: TadoOverlayMetadataConfigEntry
+) -> bool:
     """Validate the source before enabling actions for this config entry."""
     try:
         await async_validate_source(hass, entry.data[CONF_TADO_ENTRY_ID])
     except SourceError as err:
         key = str(err)
         if key in {"source_not_loaded", "cannot_read"}:
-            raise ConfigEntryNotReady(translation_domain=DOMAIN, translation_key=key) from None
+            raise ConfigEntryNotReady(
+                translation_domain=DOMAIN, translation_key=key
+            ) from None
         raise ConfigEntryError(translation_domain=DOMAIN, translation_key=key) from None
     entry.runtime_data = Runtime(asyncio.Lock())
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: TadoOverlayMetadataConfigEntry) -> bool:
+async def async_unload_entry(
+    hass: HomeAssistant, entry: TadoOverlayMetadataConfigEntry
+) -> bool:
     """Keep the action registered so it can report an informative load error."""
     entry.runtime_data.active = False
     return True

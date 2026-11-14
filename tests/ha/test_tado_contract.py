@@ -6,7 +6,7 @@ from importlib.resources import files
 
 from homeassistant.components.tado.coordinator import TadoDataUpdateCoordinator
 from homeassistant.config_entries import ConfigEntryState
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.tado_overlay_metadata import async_setup, async_setup_entry
 from custom_components.tado_overlay_metadata.adapter import resolve_client

@@ -16,7 +16,9 @@ def test_timed_off_uses_remaining_duration_and_off(ha_boundary, monkeypatch):
 
 
 @pytest.mark.parametrize("deadline", [999, 1000, 1001])
-def test_expired_or_subsecond_deadline_does_not_write(ha_boundary, monkeypatch, deadline):
+def test_expired_or_subsecond_deadline_does_not_write(
+    ha_boundary, monkeypatch, deadline
+):
     b = ha_boundary
     monkeypatch.setattr(b.module, "time", lambda: 1000.7)
     client = Mock()

@@ -11,14 +11,9 @@ from homeassistant.components.tado.coordinator import TadoDataUpdateCoordinator
 from homeassistant.config_entries import ConfigEntryState
 from PyTado.interface import Tado
 from PyTado.interface.api import Tado as ClassicTado
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 RAW = {"zoneStates": {"1": {"setting": {"type": "HEATING"}, "overlay": None}}}
-
-
-@pytest.fixture(autouse=True)
-def custom_integrations(enable_custom_integrations):
-    """Enable loading the repository's custom component."""
 
 
 @pytest.fixture

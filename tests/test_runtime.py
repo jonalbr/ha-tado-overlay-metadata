@@ -20,7 +20,9 @@ async def configured(boundary):
         data={"tado_entry_id": "source"},
         state=boundary.states.LOADED,
     )
-    client = SimpleNamespace(get_zone_states=Mock(return_value=RAW), set_zone_overlay=Mock())
+    client = SimpleNamespace(
+        get_zone_states=Mock(return_value=RAW), set_zone_overlay=Mock()
+    )
     source = SimpleNamespace(
         entry_id="source",
         domain="tado",
@@ -40,7 +42,7 @@ async def configured(boundary):
 def test_setup_capture_unload(ha_boundary):
     async def run():
         b = ha_boundary
-        metadata, source, client = await configured(b)
+        metadata, _source, client = await configured(b)
         client.get_zone_states.assert_not_called()
         result = await b.service["handler"](SimpleNamespace(data={}))
         assert result["snapshots"]["1"]["mode"] == "auto"
@@ -102,7 +104,9 @@ def test_concurrent_requests_serialized(ha_boundary):
             return result
 
         b.hass.async_add_executor_job = executor
-        await asyncio.gather(*(b.service["handler"](SimpleNamespace(data={})) for _ in range(3)))
+        await asyncio.gather(
+            *(b.service["handler"](SimpleNamespace(data={})) for _ in range(3))
+        )
         assert maximum == 1
 
     asyncio.run(run())
@@ -123,7 +127,9 @@ def test_config_flow_no_tado_and_duplicate(ha_boundary):
         await configured(b)
         result = await flow.async_step_user()
         assert result["type"] == "form"
-        result = await flow.async_step_user({"tado_entry_id": "source", "ignored": "not-stored"})
+        result = await flow.async_step_user(
+            {"tado_entry_id": "source", "ignored": "not-stored"}
+        )
         assert result["data"] == {"tado_entry_id": "source"}
         flow.configured_ids = {"source"}
         with pytest.raises(b.error, match="already_configured"):

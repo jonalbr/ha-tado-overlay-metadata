@@ -47,7 +47,7 @@ rules:
   docs-installation-instructions:
     status: done
     comment: >-
-      README includes prerequisites, HACS and manual installation, and UI setup.
+      README includes prerequisites, Marketplace and legacy HACS installation, and UI setup.
   docs-removal-instructions:
     status: done
     comment: >-

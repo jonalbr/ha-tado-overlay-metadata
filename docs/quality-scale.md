@@ -35,23 +35,25 @@ available on 2026-09-12. Machine-readable status is recorded in
 ## Verification
 
 - 61 portable tests cover normalization, action boundaries, serialization and timed OFF.
-- 19 tests use Home Assistant 2026.10.4 and mocked Tado network calls to check flow
+- 19 tests use Home Assistant 2026.11.1 with the matching official
+  `pytest-homeassistant` package and mocked Tado network calls to check flow
   creation, failures, recovery, duplicates, source reloads and the action lifecycle.
   Fixtures use Core's real Tado coordinator and the real python-tado interface,
   with an autospecced classic API. Contract tests also check Core's library pin
-  and the timed-OFF call signature. Compatibility was rechecked on 2026-10-25.
+  and the timed-OFF call signature. Compatibility was rechecked on 2026-11-14.
 - The same 19 framework tests also pass on the minimum supported Home Assistant
-  2026.9.0 using its matching test plugin 0.13.363, including the Tado contract checks.
+  2026.9.0 using its matching legacy test plugin 0.13.363 in an isolated test copy,
+  including the Tado contract checks. Compatibility was rechecked on 2026-11-14.
 - Config-flow coverage is 100% for statements and branches on both tested releases.
-  The CI job targets 2026.10.4 and fails below 100%.
+  The CI job targets 2026.11.1 and fails below 100%.
 - The local release validator checks version agreement, translations, required
   files and both icon sizes. The release builder checks ZIP integrity.
 
 The [branding rule](https://developers.home-assistant.io/docs/core/integration-quality-scale/rules/brands/)
 is satisfied using the supported
 [local branding mechanism for custom integrations](https://developers.home-assistant.io/blog/2026/02/24/brands-proxy-api/).
-The original assets are bundled with the component rather than submitted to the
-central brands repository used by core integrations.
+The SVG master and its PNG exports are bundled with the component rather than
+submitted to the central brands repository used by core integrations.
 
 This assessment does not claim Silver, full runtime coverage, or compatibility
 with all future Home Assistant versions. The private Tado interface remains a

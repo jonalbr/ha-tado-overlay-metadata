@@ -35,7 +35,7 @@ async def async_validate_source(hass: HomeAssistant, source_id: str) -> None:
     client = resolve_client(hass, source_id)
     try:
         response = await hass.async_add_executor_job(client.get_zone_states)
-    except Exception:
+    except Exception:  # noqa: BLE001 - Sanitize arbitrary vendor failures.
         # Vendor exception messages can contain authentication or request details.
         raise SourceError("cannot_read") from None
     if resolve_client(hass, source_id) is not client:

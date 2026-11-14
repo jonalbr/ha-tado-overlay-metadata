@@ -5,8 +5,12 @@ from unittest.mock import Mock
 
 import pytest
 from homeassistant.config_entries import ConfigEntryState
-from homeassistant.exceptions import ConfigEntryError, ConfigEntryNotReady, HomeAssistantError
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from homeassistant.exceptions import (
+    ConfigEntryError,
+    ConfigEntryNotReady,
+    HomeAssistantError,
+)
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.tado_overlay_metadata import (
     async_setup,
@@ -39,10 +43,14 @@ async def test_setup_and_unload(hass, source, metadata):
     assert hass.services.has_service(DOMAIN, "capture")
     assert hass.services.has_service(DOMAIN, "restore_timed_off")
     with pytest.raises(HomeAssistantError):
-        await hass.services.async_call(DOMAIN, "capture", {}, blocking=True, return_response=True)
+        await hass.services.async_call(
+            DOMAIN, "capture", {}, blocking=True, return_response=True
+        )
 
 
-@pytest.mark.parametrize("failure", ["unloaded", "network", "incompatible", "malformed", "missing"])
+@pytest.mark.parametrize(
+    "failure", ["unloaded", "network", "incompatible", "malformed", "missing"]
+)
 async def test_setup_failure(hass, source, metadata, failure):
     if failure == "unloaded":
         source._async_set_state(hass, ConfigEntryState.NOT_LOADED, None)
@@ -55,8 +63,12 @@ async def test_setup_failure(hass, source, metadata, failure):
     elif failure == "malformed":
         source.runtime_data._tado.get_zone_states.return_value = {}
     else:
-        hass.config_entries.async_update_entry(metadata, data={CONF_TADO_ENTRY_ID: "missing"})
-    error = ConfigEntryNotReady if failure in {"unloaded", "network"} else ConfigEntryError
+        hass.config_entries.async_update_entry(
+            metadata, data={CONF_TADO_ENTRY_ID: "missing"}
+        )
+    error = (
+        ConfigEntryNotReady if failure in {"unloaded", "network"} else ConfigEntryError
+    )
     with pytest.raises(error) as caught:
         await async_setup_entry(hass, metadata)
     assert "private vendor detail" not in str(caught.value)
@@ -79,5 +91,7 @@ async def test_source_reload(hass, source, metadata):
     metadata._async_set_state(hass, ConfigEntryState.LOADED, None)
     replacement = Mock(get_zone_states=Mock(return_value=RAW))
     source.runtime_data = SimpleNamespace(_tado=replacement)
-    await hass.services.async_call(DOMAIN, "capture", {}, blocking=True, return_response=True)
+    await hass.services.async_call(
+        DOMAIN, "capture", {}, blocking=True, return_response=True
+    )
     replacement.get_zone_states.assert_called_once_with()

@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.data_entry_flow import FlowResultType
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from pytest_homeassistant.common import MockConfigEntry
 
 from custom_components.tado_overlay_metadata.const import CONF_TADO_ENTRY_ID, DOMAIN
 
@@ -58,7 +58,9 @@ async def test_success(hass, source, setup_entry):
 
 async def test_duplicate(hass, source, setup_entry):
     MockConfigEntry(
-        domain=DOMAIN, unique_id=source.entry_id, data={CONF_TADO_ENTRY_ID: source.entry_id}
+        domain=DOMAIN,
+        unique_id=source.entry_id,
+        data={CONF_TADO_ENTRY_ID: source.entry_id},
     ).add_to_hass(hass)
     result = await start(hass)
     result = await hass.config_entries.flow.async_configure(
@@ -70,7 +72,9 @@ async def test_duplicate(hass, source, setup_entry):
     setup_entry.assert_not_called()
 
 
-@pytest.mark.parametrize("failure", ["cannot_read", "unsupported_response", "incompatible_source"])
+@pytest.mark.parametrize(
+    "failure", ["cannot_read", "unsupported_response", "incompatible_source"]
+)
 async def test_error_recovery(hass, source, setup_entry, failure):
     client = source.runtime_data._tado
     if failure == "cannot_read":

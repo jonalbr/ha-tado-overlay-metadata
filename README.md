@@ -1,5 +1,7 @@
 # Tado Overlay Metadata
 
+<img src="custom_components/tado_overlay_metadata/brand/icon.svg" width="96" height="96" alt="Tado Overlay Metadata: Tado with stacked overlay layers">
+
 Tado Overlay Metadata is a Home Assistant custom integration for automations that
 temporarily pause heating and need to preserve the original Tado settings and
 expiry time. It uses the built-in Tado integration's authenticated connection.

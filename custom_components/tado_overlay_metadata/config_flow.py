@@ -14,7 +14,9 @@ class TadoOverlayMetadataFlow(ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         """Select and validate an existing Tado connection."""
         choices = {
             entry.entry_id: entry.title
@@ -45,7 +47,9 @@ class TadoOverlayMetadataFlow(ConfigFlow, domain=DOMAIN):
             errors=errors,
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_TADO_ENTRY_ID, default=next(iter(choices))): vol.In(choices),
+                    vol.Required(
+                        CONF_TADO_ENTRY_ID, default=next(iter(choices))
+                    ): vol.In(choices),
                 }
             ),
         )
