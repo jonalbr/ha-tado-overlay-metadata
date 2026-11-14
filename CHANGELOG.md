@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.4.0 - 2026-11-14
+## 0.1.4 - 2026-11-14
 
 - Validate against Home Assistant 2026.11.1 while retaining support for 2026.9.0 or later.
 - Added a new logo.
