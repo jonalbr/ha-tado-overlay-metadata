@@ -907,7 +907,7 @@ wheels = [
 
 [[package]]
 name = "ha-tado-overlay-metadata"
-version = "0.1.3"
+version = "1.4.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]

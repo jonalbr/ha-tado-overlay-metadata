@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## 1.4.0 - 2026-11-14
 
 - Validate against Home Assistant 2026.11.1 while retaining support for 2026.9.0 or later.
 - Added a new logo.
 - Classify the integration under heating thermostats in the Marketplace catalog.
+- Make the AI-assistance disclosure prominent at the top of the README.
 
 ## 0.1.3 - 2026-10-25
 

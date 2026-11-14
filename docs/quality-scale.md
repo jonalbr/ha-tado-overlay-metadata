@@ -1,6 +1,6 @@
 # Bronze quality assessment
 
-The 0.1.3 candidate retains the applicable Bronze requirements assessed against the
+The 1.4.0 candidate retains the applicable Bronze requirements assessed against the
 [Home Assistant quality scale](https://developers.home-assistant.io/docs/core/integration-quality-scale/).
 This is a self-assessment of a custom integration. Home Assistant assigns custom
 integrations the Custom designation; no official Bronze certification is claimed.
