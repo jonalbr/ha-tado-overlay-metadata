@@ -2,11 +2,12 @@
 
 <img src="custom_components/tado_overlay_metadata/brand/icon.svg" width="96" height="96" alt="Tado Overlay Metadata: Tado with stacked overlay layers">
 
+> [!NOTE]
+> **AI-assisted development:** AI tools helped write the code, tests and documentation.
+
 Tado Overlay Metadata is a Home Assistant custom integration for automations that
 temporarily pause heating and need to preserve the original Tado settings and
 expiry time. It uses the built-in Tado integration's authenticated connection.
-AI tools were used to assist with the code, tests and documentation in this
-project.
 
 Two actions are available:
 
@@ -196,11 +197,6 @@ command are separate operations, and cloud data may reflect an older device repo
 
 Removal does not cancel an OFF timer already sent to Tado or remove snapshots
 stored by an automation. Those remain managed by Tado and the calling automation.
-
-## Development and AI assistance
-
-AI tools were used to assist with the code, tests and documentation in this
-project.
 
 ## License
 
