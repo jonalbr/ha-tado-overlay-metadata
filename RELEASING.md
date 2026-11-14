@@ -11,15 +11,32 @@
    it contains integration files for extraction into
    `custom_components/tado_overlay_metadata/`. Marketplace downloads repository files.
 
-## Publication
+## Automated publication
 
-1. Confirm GitHub Actions tests, HACS validation and hassfest succeed on that commit.
-2. Set the changelog release date and ensure the release commit includes it.
-3. Create a tag matching the manifest, for example `v0.1.4`, and publish its GitHub
-   release with changelog notes and the validated ZIP.
+1. Complete the candidate's live Home Assistant smoke test. Use a manually
+   published prerelease if required live validation is incomplete; the automated
+   workflow publishes stable releases only.
+2. Set the changelog release date, commit the version, lockfile and notes, and
+   push the commit. Confirm all four jobs in the **Validate** workflow succeed.
+3. Create and push an annotated tag matching the manifest and project version:
 
-Use a prerelease if required live validation is incomplete. Repository description
-and topics should identify Home Assistant, Marketplace and Tado. Marketplace
+   ```console
+   git tag -a v0.1.4 -m "Release 0.1.4"
+   git push origin v0.1.4
+   ```
+
+Pushing a `v*` tag starts the **Release** workflow. It reuses all four validation
+jobs, then builds the deterministic integration ZIP and publishes a stable GitHub
+release with that ZIP and the matching dated section of `CHANGELOG.md`. A tag
+that differs from the source version or lacks release notes fails before
+publication. Existing releases are never overwritten. Version bumps and live
+smoke tests remain manual.
+
+Confirm the workflow succeeds and inspect the published notes and ZIP. Only the
+publishing job has repository write permission; it uses GitHub's built-in token,
+so no additional release secret is needed.
+
+Repository description and topics should identify Home Assistant, Marketplace and Tado. Marketplace
 uses `jonalbr/ha-tado-overlay-metadata`. Keep the `hacs.json` filename and
 the HACS validation action as Marketplace uses the same metadata and catalog.
 See the [Marketplace contributor documentation](https://contributors.home-assistant.io/marketplace/).

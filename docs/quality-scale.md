@@ -34,7 +34,8 @@ available on 2026-09-12. Machine-readable status is recorded in
 
 ## Verification
 
-- 61 portable tests cover normalization, action boundaries, serialization and timed OFF.
+- 65 portable tests cover normalization, action boundaries, serialization, timed OFF
+  and release tag, notes and archive validation.
 - 19 tests use Home Assistant 2026.11.1 with the matching official
   `pytest-homeassistant` package and mocked Tado network calls to check flow
   creation, failures, recovery, duplicates, source reloads and the action lifecycle.
